@@ -1,0 +1,213 @@
+@import "tailwindcss";
+
+/* ───────────────────────── Suinance design tokens ─────────────────────────
+   One light brand look: grid paper, heavy black ink, highlighter yellow.
+   Every component reads these tokens; never hard-code colours in components. */
+
+:root {
+  --paper: #ffffff;
+  --grid: #efefef;
+  --ink: #111111;
+  --ink-2: #2a2a2a;
+  --muted: #5b5b5b;
+  --line: #e4e4e4;
+  --line-strong: #111111;
+  --yellow: #ffe11a;
+  --yellow-2: #ffd400;
+  --yellow-soft: #fff6b3;
+  --yellow-wash: #fffbe0;
+  --brass: #8a6400;
+  --success: #12804a;
+  --success-soft: #e3f6ec;
+  --danger: #c2183c;
+  --danger-soft: #fde8ec;
+  --radius: 14px;
+  --shadow-c: #111111;
+  --glow: 0.6;
+  color-scheme: light;
+}
+
+/* ───────────── Dark theme ─────────────
+   Applied by data-theme="dark", or by the OS setting when the visitor has not chosen. */
+:root[data-theme="dark"] {
+  --paper: #0b0b0c;
+  --grid: #1a1a1c;
+  --ink: #f3f3f1;
+  --ink-2: #d9d9d6;
+  --muted: #a3a3a0;
+  --line: #2a2a2d;
+  --line-strong: #f3f3f1;
+  --yellow: #ffe11a;
+  --yellow-2: #ffd400;
+  --yellow-soft: #2b260c;
+  --yellow-wash: #141309;
+  --brass: #e0b23a;
+  --success: #4ad48c;
+  --success-soft: #0f2a1d;
+  --danger: #ff6b86;
+  --danger-soft: #331018;
+  --shadow-c: #ffd400;
+  --glow: 0.22;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0b0b0c;
+    --grid: #1a1a1c;
+    --ink: #f3f3f1;
+    --ink-2: #d9d9d6;
+    --muted: #a3a3a0;
+    --line: #2a2a2d;
+    --line-strong: #f3f3f1;
+    --yellow-soft: #2b260c;
+    --yellow-wash: #141309;
+    --brass: #e0b23a;
+    --success: #4ad48c;
+    --success-soft: #0f2a1d;
+    --danger: #ff6b86;
+    --danger-soft: #331018;
+    --shadow-c: #ffd400;
+    --glow: 0.22;
+    color-scheme: dark;
+  }
+}
+
+/* Surfaces that keep their own palette in both themes.
+   .surface-dark: always a near-black panel (footer, tickers, table heads, chips).
+   Solid yellow: always black text on top. */
+.surface-dark {
+  /* Light-theme palette, so any light card nested inside stays readable in both themes. */
+  --ink: #111111;
+  --paper: #ffffff;
+  --ink-2: #2a2a2a;
+  --muted: #5b5b5b;
+  --line: #e4e4e4;
+  --yellow-soft: #fff6b3;
+  --yellow-wash: #fffbe0;
+  --brass: #8a6400;
+  --success: #12804a;
+  --success-soft: #e3f6ec;
+  --danger: #c2183c;
+  --danger-soft: #fde8ec;
+  --shadow-c: #ffd400;
+  color-scheme: light;
+}
+:root[data-theme="dark"] .surface-dark { --ink: #18181a; }
+:root[data-theme="dark"] .bg-yellow,
+:root[data-theme="dark"] .bg-yellow-2,
+:root[data-theme="dark"] .highlight {
+  --ink: #111111;
+  --paper: #ffffff;
+  --muted: #3d3d3d;
+  --line: rgb(17 17 17 / 0.16);
+  --shadow-c: #111111;
+  color: #111111;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .surface-dark { --ink: #18181a; }
+  :root:not([data-theme="light"]) .bg-yellow,
+  :root:not([data-theme="light"]) .bg-yellow-2,
+  :root:not([data-theme="light"]) .highlight {
+    --ink: #111111;
+    --paper: #ffffff;
+    --muted: #3d3d3d;
+    --line: rgb(17 17 17 / 0.16);
+    --shadow-c: #111111;
+    color: #111111;
+  }
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-grid: var(--grid);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-yellow: var(--yellow);
+  --color-yellow-2: var(--yellow-2);
+  --color-yellow-soft: var(--yellow-soft);
+  --color-yellow-wash: var(--yellow-wash);
+  --color-brass: var(--brass);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+
+  --font-display: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-plex-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, Menlo, monospace;
+
+  --radius-card: var(--radius);
+  --shadow-hard: 4px 4px 0 0 var(--shadow-c);
+  --shadow-hard-sm: 2px 2px 0 0 var(--shadow-c);
+  --shadow-soft: 0 18px 50px -24px rgb(17 17 17 / 0.35);
+
+  --animate-marquee: marquee 40s linear infinite;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@layer base {
+  * { border-color: var(--line); }
+  html { -webkit-text-size-adjust: 100%; text-rendering: optimizeLegibility; }
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.025em; text-wrap: balance; line-height: 1.08; }
+  p { text-wrap: pretty; }
+  ::selection { background: var(--yellow); color: var(--ink); }
+  :focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 6px; }
+  img, svg, canvas { display: block; }
+  /* Grid children may shrink below their content width (prevents sideways scroll from wide tables/SVGs). */
+  :where(.grid) > * { min-width: 0; }
+}
+
+@layer utilities {
+  .bg-grid {
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .bg-grid-fade {
+    mask-image: radial-gradient(ellipse at center, #000 35%, transparent 75%);
+  }
+  .highlight {
+    position: relative;
+    z-index: 0;
+    white-space: nowrap;
+  }
+  .highlight::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: 0.2em -0.12em 0.02em -0.08em;
+    background: var(--yellow);
+    transform: rotate(-1.4deg) skewX(-8deg);
+    border-radius: 3px 8px 4px 10px;
+  }
+  .underline-yellow { box-shadow: inset 0 -0.38em 0 var(--yellow); }
+  .tabular { font-variant-numeric: tabular-nums; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { scrollbar-width: none; }
+}
+
+/* Lenis smooth scroll */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}

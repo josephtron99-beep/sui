@@ -1,0 +1,22 @@
+# dependencies & builds
+node_modules/
+.next/
+out/
+build/
+*.tsbuildinfo
+next-env.d.ts
+
+# local database (contains test accounts)
+.pglite/
+
+# secrets
+.env
+.env.*
+!.env.example
+
+# deploy / editor / OS
+.vercel/
+.claude/settings.local.json
+.DS_Store
+Thumbs.db
+npm-debug.log*
