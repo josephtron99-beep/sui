@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { MARK_PATH, WORDMARK_PATH } from "@/components/ui/logo-paths";
 
-export const alt = "Suinance · Stake SUI. Keep your keys.";
+export const alt = "Suinance · Stake SUI. Earn on-chain.";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -28,9 +28,9 @@ export default function OgImage() {
         </svg>
         <div style={{ display: "flex", flexDirection: "column", fontSize: 92, fontWeight: 800, lineHeight: 1, letterSpacing: -3 }}>
           <span>Stake SUI.</span>
-          <span style={{ display: "flex", background: "#ffe11a", padding: "4px 16px", marginTop: 12, alignSelf: "flex-start" }}>Keep your keys.</span>
+          <span style={{ display: "flex", background: "#ffe11a", padding: "4px 16px", marginTop: 12, alignSelf: "flex-start" }}>Earn on-chain.</span>
         </div>
-        <span style={{ fontSize: 28, color: "#5b5b5b" }}>Independent Sui staking program · suinance</span>
+        <span style={{ fontSize: 28, color: "#5b5b5b" }}>Native SUI staking · non-custodial · every epoch</span>
       </div>
     ),
     size,

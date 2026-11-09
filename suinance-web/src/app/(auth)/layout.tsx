@@ -14,7 +14,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         <LogoCoin3D className="relative mx-auto aspect-square w-full max-w-[460px] self-center" />
         <div className="relative grid gap-3">
           <p className="max-w-md font-display text-3xl font-bold leading-tight">
-            Stake SUI from your own wallet. <span className="text-yellow">Keep your keys.</span>
+            Stake SUI from your own wallet. <span className="text-yellow">Earn on-chain.</span>
           </p>
           <p className="text-sm text-paper/60">Suinance is independent and not affiliated with Mysten Labs or the Sui Foundation.</p>
         </div>

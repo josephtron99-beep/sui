@@ -148,7 +148,7 @@ export const ecosystem: EcoProject[] = [
 ];
 
 export const faqs = [
-  { q: "What is Suinance?", a: "Suinance is an independent staking program on Sui. It helps you stake SUI natively with a curated group of validators and track your rewards in one place." },
+  { q: "What is Suinance?", a: "Suinance is an independent staking hub for Sui. You delegate SUI natively from your own wallet to the validators you choose, and track your on-chain stakes and rewards in one place." },
   { q: "Do I give Suinance my SUI?", a: "No. Staking happens from your own wallet. Your SUI moves into the validator's staking pool and you receive a StakedSui object that only your wallet controls. Neither Suinance nor the validator can spend it." },
   { q: "When do rewards start?", a: "Your stake becomes active at the start of the next epoch, about 24 hours later. Rewards are added at the end of every epoch after that." },
   { q: "How much can I earn?", a: "Sui staking rewards are variable. They depend on total network stake, the stake subsidy, gas fees and the validator's commission. The current network rate is shown live on the Stake and Validators pages." },

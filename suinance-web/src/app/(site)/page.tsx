@@ -17,9 +17,9 @@ import { formatNumber } from "@/lib/utils";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: { absolute: "Suinance · Stake SUI with Curated Validators, Keep Your Keys" },
+  title: { absolute: "Suinance · Stake SUI On-Chain, Earn Every Epoch" },
   description:
-    "Stake SUI natively with a curated group of Sui validators. Non-custodial, live staking rates, rewards every epoch, withdraw any time. Learn how Sui works.",
+    "Stake SUI on-chain from your own wallet. Compare live Sui validators, earn protocol rewards every epoch and withdraw any time. Non-custodial, no lock-up.",
   alternates: { canonical: "/" },
   openGraph: { url: "/", images: [OG_IMAGE] },
   twitter: { card: "summary_large_image", images: [OG_IMAGE.url] },
@@ -33,8 +33,8 @@ const pillars = [
   },
   {
     icon: Layers,
-    title: "Curated validators",
-    body: "Compare commission, stake and performance for every validator, then spread your stake across the ones you trust.",
+    title: "You pick the validators",
+    body: "Compare live commission, stake and voting power for every Sui validator, then spread your stake across the ones you trust.",
   },
   {
     icon: Timer,
@@ -54,19 +54,19 @@ export default async function HomePage() {
         <Container className="grid items-center gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
           <div className="grid gap-7 pt-6 lg:pt-0">
             <Reveal>
-              <Eyebrow>Independent Sui staking program</Eyebrow>
+              <Eyebrow>Native staking on Sui mainnet</Eyebrow>
             </Reveal>
             <h1 className="text-[clamp(38px,5vw,66px)] font-extrabold leading-[1.02]">
               <SplitWords text="Stake SUI." />
               <br />
               <span className="highlight">
-                <SplitWords text="Keep your keys." delay={0.18} />
+                <SplitWords text="Earn on-chain." delay={0.18} />
               </span>
             </h1>
             <Reveal delay={0.35}>
               <p className="max-w-[50ch] text-base text-muted sm:text-lg">
-                Suinance helps you stake SUI natively with a curated group of validators. Your coins never leave your wallet, and rewards
-                arrive every epoch.
+                Delegate SUI to Sui validators straight from your wallet. Your stake lives on-chain as a StakedSui object only you control, and
+                protocol rewards compound every epoch. No custody. No lock-up.
               </p>
             </Reveal>
             <Reveal delay={0.45} className="flex flex-wrap items-center gap-3">
@@ -78,6 +78,21 @@ export default async function HomePage() {
               <LinkButton href="/learn" variant="outline" size="lg">
                 Learn how Sui works
               </LinkButton>
+            </Reveal>
+            <Reveal delay={0.55}>
+              <ul className="flex flex-wrap gap-2" aria-label="How staking on Suinance works">
+                {["100% on-chain", "Non-custodial", "Move-secured", "Withdraw any time"].map((t) => (
+                  <li
+                    key={t}
+                    className="flex items-center gap-2 rounded-full border border-line bg-paper/70 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.12em] text-muted backdrop-blur"
+                  >
+                    <svg viewBox="0 0 100 100" className="h-2.5 w-2.5" aria-hidden>
+                      <path d="M50 4 90 27v46L50 96 10 73V27z" fill="var(--yellow-2)" stroke="var(--ink)" strokeWidth="8" />
+                    </svg>
+                    {t}
+                  </li>
+                ))}
+              </ul>
             </Reveal>
           </div>
           <Reveal delay={0.2} y={0}>

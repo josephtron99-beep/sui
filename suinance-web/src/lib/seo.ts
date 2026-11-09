@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { site } from "@/config/site";
 
-export const OG_IMAGE = { url: "/opengraph-image", width: 1200, height: 630, alt: "Suinance · Stake SUI. Keep your keys." };
+export const OG_IMAGE = { url: "/opengraph-image", width: 1200, height: 630, alt: "Suinance · Stake SUI. Earn on-chain." };
 
 /** Per-page metadata with a self-referencing canonical URL and matching social cards. */
 export function pageMeta(path: string, title: string, description: string, opts: { index?: boolean } = {}): Metadata {

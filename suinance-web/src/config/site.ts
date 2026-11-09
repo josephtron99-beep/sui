@@ -1,8 +1,8 @@
 export const site = {
   name: "Suinance",
-  tagline: "Stake SUI with a curated group of validators",
+  tagline: "Stake SUI on-chain, earn every epoch",
   description:
-    "Suinance is an independent Sui staking program. Stake SUI natively with a curated group of validators, keep custody of your coins, and earn protocol rewards every epoch.",
+    "Suinance is an independent staking hub for Sui. Delegate SUI to validators from your own wallet, follow live on-chain data and earn protocol rewards every epoch.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
   /** Fill these in to show them in the footer. Empty values are hidden. */
   social: {
