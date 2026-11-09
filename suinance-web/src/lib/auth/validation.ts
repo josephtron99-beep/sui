@@ -60,3 +60,28 @@ export function toFieldErrors(error: z.ZodError): FieldErrors {
   }
   return out;
 }
+
+const plainText = /^[^<>{}\[\]`]*$/;
+
+export const applicationSchema = z.object({
+  validatorName: z.string().trim().min(2, "Enter your validator's name").max(80, "Use 80 characters or fewer").regex(plainText, "Remove special characters such as < > { }"),
+  suiAddress: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .regex(/^0x[0-9a-f]{64}$/, "Enter the full Sui address: 0x followed by 64 hex characters"),
+  commissionPct: z.preprocess(
+    (v) => (v === "" || v === null ? undefined : v),
+    z.coerce.number({ error: "Enter your commission" }).min(0, "Enter a number from 0 to 100").max(100, "Enter a number from 0 to 100"),
+  ),
+  hosting: z.string().trim().min(2, "Tell us where the validator runs").max(120, "Use 120 characters or fewer").regex(plainText, "Remove special characters such as < > { }"),
+  website: z
+    .string()
+    .trim()
+    .max(200, "Use 200 characters or fewer")
+    .refine((v) => v === "" || /^https:\/\/[^\s<>"]+\.[^\s<>"]+$/.test(v), "Enter a full link starting with https://")
+    .optional(),
+  contact: z.string().trim().max(120, "Use 120 characters or fewer").regex(plainText, "Remove special characters such as < > { }").optional(),
+  notes: z.string().trim().max(1000, "Use 1,000 characters or fewer").optional(),
+  confirm: z.literal(true, { error: "Please confirm you operate this validator" }),
+});

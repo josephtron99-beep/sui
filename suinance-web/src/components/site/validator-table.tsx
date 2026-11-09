@@ -11,7 +11,7 @@ import { cn, formatCompact, formatNumber, shortAddress } from "@/lib/utils";
 
 type SortKey = "stakeSui" | "commissionPct" | "apyPct" | "name";
 
-function ValidatorAvatar({ v, size = 36 }: { v: Validator; size?: number }) {
+export function ValidatorAvatar({ v, size = 36 }: { v: Validator; size?: number }) {
   const [failed, setFailed] = useState(false);
   if (!v.imageUrl || failed) {
     return (
@@ -127,7 +127,7 @@ export function ValidatorTable({ validators }: { validators: Validator[] }) {
                       <span className="grid">
                         <span className="flex items-center gap-2 font-medium group-hover:underline">
                           {v.name}
-                          {v.partner && <Badge tone="yellow">Partner</Badge>}
+                          {v.partner && <Badge tone="yellow">Program</Badge>}
                           {v.atRisk && <Badge tone="danger">At risk</Badge>}
                         </span>
                         <span className="font-mono text-[12px] text-muted">{shortAddress(v.address)}</span>
@@ -138,9 +138,9 @@ export function ValidatorTable({ validators }: { validators: Validator[] }) {
                   <td className="px-4 py-3 text-right font-mono tabular">{formatNumber(v.commissionPct, 2)}%</td>
                   <td className="px-4 py-3 text-right font-mono tabular">{formatNumber(v.apyPct, 2)}%</td>
                   <td className="px-4 py-3 text-right">
-                    <Link href={`/stake?validator=${v.address}`} className={buttonClasses("outline", "sm")}>
-                      Stake
-                    </Link>
+                    <button type="button" onClick={() => setActive(v)} className={buttonClasses("outline", "sm")}>
+                      Details
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -200,8 +200,8 @@ export function ValidatorTable({ validators }: { validators: Validator[] }) {
                 ))}
               </dl>
               <div className="grid gap-2">
-                <Link href={`/stake?validator=${active.address}`} className={buttonClasses("primary", "lg", "w-full")}>
-                  Stake with {active.name}
+                <Link href={`/validators/${active.address}`} className={buttonClasses("primary", "lg", "w-full")}>
+                  Full scorecard &amp; program checks
                 </Link>
                 <a href={`https://suiscan.xyz/mainnet/validator/${active.address}`} target="_blank" rel="noopener noreferrer" className={buttonClasses("outline", "lg", "w-full")}>
                   View on Suiscan <ExternalLink className="h-4 w-4" aria-hidden />

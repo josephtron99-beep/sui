@@ -10,7 +10,8 @@ const globalForDb = globalThis as unknown as { __suinanceDb?: Promise<DB> };
 async function create(): Promise<DB> {
   const url = process.env.DATABASE_URL;
   if (url) {
-    const client = postgres(url, { prepare: false, max: 5 });
+    const client = postgres(url, { prepare: false, max: 5, onnotice: () => {} });
+    await client.unsafe(schema.BOOTSTRAP_SQL);
     return drizzlePg(client, { schema });
   }
   if (process.env.VERCEL || process.env.NODE_ENV === "production") {
@@ -25,7 +26,11 @@ async function create(): Promise<DB> {
 }
 
 export function getDb(): Promise<DB> {
-  globalForDb.__suinanceDb ??= create();
+  // A failed first connection is not cached, so the next request retries.
+  globalForDb.__suinanceDb ??= create().catch((err) => {
+    globalForDb.__suinanceDb = undefined;
+    throw err;
+  });
   return globalForDb.__suinanceDb;
 }
 

@@ -11,9 +11,9 @@ export function LiveStats({ snap, className }: { snap: NetworkSnapshot | null; c
     );
   }
   const items = [
-    { label: "Network staking rate (est.)", node: <CountUp value={snap.networkApyPct} decimals={2} suffix="%" /> },
-    { label: "SUI staked on the network", node: <CountUp value={snap.totalStakeSui / 1e9} decimals={2} suffix="B" /> },
     { label: "Active validators", node: <CountUp value={snap.validatorCount} /> },
+    { label: "SUI staked with validators", node: <CountUp value={snap.totalStakeSui / 1e9} decimals={2} suffix="B" /> },
+    { label: "Reference gas price (MIST)", node: <CountUp value={snap.referenceGasPrice} /> },
     { label: "Current epoch", node: <CountUp value={snap.epoch} /> },
   ];
   return (
@@ -31,7 +31,7 @@ export function LiveStats({ snap, className }: { snap: NetworkSnapshot | null; c
           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success opacity-60" />
           <span className="relative inline-flex h-2 w-2 rounded-full bg-success" />
         </span>
-        Live from Sui mainnet · rate based on last epoch&apos;s rewards
+        Live from Sui mainnet · updated every few minutes
       </div>
     </div>
   );

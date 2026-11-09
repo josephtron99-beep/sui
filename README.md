@@ -1,10 +1,10 @@
 # Suinance
 
-Independent, non-custodial Sui staking program: research, design and the production website.
+Independent Sui Validator Program: research, design and the production website.
 
 | Path | What it is |
 |---|---|
-| [`suinance-web/`](suinance-web/README.md) | The website (Next.js 16): pages, 3D, dark theme, live Sui data, wallet staking, email-OTP accounts |
+| [`suinance-web/`](suinance-web/README.md) | The website (Next.js 16): pages, 3D, dark theme, live Sui validator data, program applications, email-OTP accounts |
 | [`.claude/skills/`](.claude/skills) | Claude Code skills: researcher, UI/UX designer, full-stack developer |
 | [`Suinance-Website-Audit.md`](Suinance-Website-Audit.md) | Full website audit (design, content, SEO, frontend, backend, QA) |
 | [`Suinance-Sitemap.md`](Suinance-Sitemap.md) | Research on 10 Sui-type chains and the site map |

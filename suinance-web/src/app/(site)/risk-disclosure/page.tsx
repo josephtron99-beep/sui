@@ -2,48 +2,46 @@ import type { Metadata } from "next";
 import { pageMeta } from "@/lib/seo";
 import { LegalPage } from "@/components/site/legal-page";
 
-export const metadata: Metadata = pageMeta("/risk-disclosure", "Risk Disclosure", "The risks of staking SUI: price risk, variable rewards, validator performance, timing, wallet security and regulation. Read before you stake.");
+export const metadata: Metadata = pageMeta("/risk-disclosure", "Risk Disclosure", "Risks for validator operators and SUI holders: no guaranteed delegation, validator operations, data and software risk, SUI price and regulation.");
 
 export default function RiskPage() {
   return (
     <LegalPage
       eyebrow="Risk disclosure"
-      title="Understand the risks before you stake"
-      intro="Staking SUI is not a savings account. Read these points carefully and only stake what you can afford to have exposed to them."
+      title="Understand the risks"
+      intro="Running or backing a Sui validator carries real risk. Read these points before you apply to the program or act on anything you see on Suinance."
       updated="9 November 2026"
       sections={[
         {
-          heading: "Price risk",
-          body: ["Rewards are paid in SUI. The market price of SUI can fall as well as rise, so the value of your stake and rewards in any other currency can go down, including below what you started with."],
-        },
-        {
-          heading: "Variable rewards",
+          heading: "No guaranteed delegation",
           body: [
-            "Staking rewards are set by the Sui protocol and change every epoch. They depend on total stake, the stake subsidy schedule, gas fees and each validator's commission and performance.",
-            "Any rate or estimate shown on Suinance describes the past or is a projection. It is not a promise of future rewards.",
+            "Joining the program does not guarantee any amount of stake. SUI holders decide for themselves where to stake, and Suinance does not control their choices.",
+            "Program status can change. A validator that stops meeting the criteria leaves the program after the grace period.",
           ],
         },
         {
-          heading: "Validator performance",
+          heading: "Validator operations",
           body: [
-            "Sui does not currently slash staked principal. However, validators that perform badly can be reported by their peers, which reduces the rewards paid to their staking pool.",
-            "Validators can change their commission for future epochs, and can leave the active set.",
+            "Operators are fully responsible for their nodes, keys, hardware, hosting and upgrades. Downtime, misconfiguration or late upgrades can lead to peer reports, which reduce the rewards paid to the validator's staking pool.",
+            "A validator whose voting power falls below Sui's thresholds can be removed from the active set by the protocol.",
           ],
         },
         {
-          heading: "Timing",
-          body: ["New stake becomes active at the start of the next epoch, about 24 hours later, and earns nothing before then. Rewards for the epoch in progress are not paid when you unstake."],
+          heading: "Rewards and price",
+          body: [
+            "Validator and staking rewards are set by the Sui protocol and change every epoch. Any figure on Suinance describes the past and is not a promise.",
+            "Rewards are paid in SUI. The market price of SUI can fall as well as rise.",
+          ],
         },
         {
-          heading: "Wallet and software risk",
+          heading: "Data and software",
           body: [
-            "You are responsible for your wallet, your recovery phrase and every transaction you approve. Lost keys cannot be recovered by Suinance or anyone else.",
-            "Blockchain software, wallets and websites can contain bugs. Check every transaction in your wallet before you approve it.",
+            "Network data comes from public Sui sources and may be delayed or incomplete. Blockchain software can contain bugs. Always verify important numbers on a Sui explorer.",
           ],
         },
         {
           heading: "Regulation and taxes",
-          body: ["The rules for staking and crypto assets differ by country and can change. You are responsible for checking that staking is allowed where you live and for any taxes due on rewards."],
+          body: ["Rules for validators, staking and crypto assets differ by country and can change. You are responsible for following the law where you operate and for any taxes due."],
         },
         {
           heading: "No advice",

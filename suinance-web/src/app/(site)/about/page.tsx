@@ -8,13 +8,13 @@ import { PageHero } from "@/components/site/page-hero";
 import { LogoCoin3D } from "@/components/three/scenes";
 import { site } from "@/config/site";
 
-export const metadata: Metadata = pageMeta("/about", "About Us", "Suinance is an independent, non-custodial Sui staking program. Learn our mission, the principles we follow and how we stay independent from Mysten Labs.");
+export const metadata: Metadata = pageMeta("/about", "About Us", "Suinance is an independent validator program for Sui. Learn our mission, the principles behind the program and how we stay independent from Mysten Labs.");
 
 const principles = [
-  { n: "01", title: "Custody stays with you", body: "Suinance never holds your SUI or your keys. Every stake and withdrawal is signed in your own wallet." },
-  { n: "02", title: "Honest numbers", body: "We show the live network rate, label every estimate and never promise returns." },
-  { n: "03", title: "Verifiable on-chain", body: "Every validator links to a public explorer, so you can check stake, commission and history yourself." },
-  { n: "04", title: "Decentralisation first", body: "We encourage spreading stake across validators instead of piling it onto the largest ones." },
+  { n: "01", title: "Rules in the open", body: "Every program criterion is published. Operators know exactly what is checked and why." },
+  { n: "02", title: "Proof over promises", body: "We judge validators on on-chain data anyone can verify, not on claims or marketing." },
+  { n: "03", title: "Decentralisation first", body: "The program favours strong mid-sized operators so voting power spreads across the network." },
+  { n: "04", title: "No custody, ever", body: "Suinance never holds SUI or keys. Operators run their own nodes and delegators stake from their own wallets." },
 ];
 
 export default function AboutPage() {
@@ -22,10 +22,10 @@ export default function AboutPage() {
     <>
       <PageHero
         eyebrow="About Suinance"
-        title="Staking made clear for every SUI holder"
-        description="Suinance brings Sui staking into one simple place: learn how the network works, compare validators and stake from your own wallet."
+        title="A higher standard for Sui validators"
+        description="Suinance runs an independent validator program: public criteria, checks every epoch and a shared home for the operators who keep Sui running."
         aside={<LogoCoin3D className="mx-auto aspect-square w-full max-w-[300px] sm:max-w-[400px]" />}
-        ticker={["Custody stays with you", "Honest numbers", "Verifiable on-chain", "Decentralisation first", "Independent"]}
+        ticker={["Rules in the open", "Proof over promises", "Decentralisation first", "No custody", "Independent"]}
       />
 
       <Section className="border-t-[1.5px] border-ink">
@@ -35,12 +35,12 @@ export default function AboutPage() {
           </Reveal>
           <Reveal delay={0.1} className="grid gap-5 text-[17px]">
             <p>
-              Staking is how SUI holders help secure the network and share in the rewards it pays. Yet choosing a validator, understanding epochs
-              and knowing what you will earn is harder than it should be.
+              Sui runs on its validators. Every transaction, every checkpoint and every protocol upgrade depends on independent operators doing
+              their job well, epoch after epoch.
             </p>
             <p>
-              Suinance puts it in one place. We explain Sui in plain language, show live data for every validator and let you stake natively,
-              without handing your coins to anyone.
+              Good operators deserve to be found, and SUI holders deserve a clear way to find them. The Suinance Validator Program sets a public
+              bar, checks it with on-chain data every epoch and brings the operators who meet it together in one place.
             </p>
           </Reveal>
         </Container>
@@ -83,7 +83,7 @@ export default function AboutPage() {
           <Reveal delay={0.1}>
             <div className="grid h-full content-start gap-4 rounded-card border-[1.5px] border-ink p-8">
               <h2 className="text-3xl font-extrabold">Get in touch</h2>
-              <p className="text-muted">Questions about staking or validator partnerships? Reach the team directly.</p>
+              <p className="text-muted">Questions about the program or an application? Reach the team directly.</p>
               <div className="flex flex-wrap gap-3">
                 {site.supportEmail && (
                   <LinkButton href={`mailto:${site.supportEmail}`} external>

@@ -111,11 +111,11 @@ export const useCases = [
   },
 ];
 
-export const stakingBasics = [
-  { title: "Stake", body: "You send SUI to a validator's staking pool. You receive a StakedSui object in your own wallet that proves your position." },
-  { title: "Activate", body: "Your stake becomes active at the start of the next epoch, roughly within 24 hours." },
-  { title: "Earn", body: "Rewards are added at the end of every epoch you are active, minus the validator's commission. They compound automatically inside the pool." },
-  { title: "Withdraw", body: "Unstake at any time. Your SUI and earned rewards come back in the same transaction. Rewards for the epoch in progress are not paid." },
+export const validatorBasics = [
+  { title: "Register", body: "An operator registers a validator candidate on-chain with its keys, network addresses and public metadata: name, description, logo and website." },
+  { title: "Gather stake", body: "SUI holders delegate to the candidate's staking pool. That stake sets its voting power, and under SIP-39 it needs at least 3 to request to join." },
+  { title: "Validate", body: "From the next epoch boundary, the validator orders and executes transactions with Mysticeti and quotes a gas price every epoch." },
+  { title: "Earn and get scored", body: "Each epoch, rewards flow to the pool and the validator keeps its commission. Peers score each other, and reported validators earn less." },
 ];
 
 /** Comparison with other fast Layer 1 networks (research pack, Nov 2026). */
@@ -148,13 +148,10 @@ export const ecosystem: EcoProject[] = [
 ];
 
 export const faqs = [
-  { q: "What is Suinance?", a: "Suinance is an independent staking hub for Sui. You delegate SUI natively from your own wallet to the validators you choose, and track your on-chain stakes and rewards in one place." },
-  { q: "Do I give Suinance my SUI?", a: "No. Staking happens from your own wallet. Your SUI moves into the validator's staking pool and you receive a StakedSui object that only your wallet controls. Neither Suinance nor the validator can spend it." },
-  { q: "When do rewards start?", a: "Your stake becomes active at the start of the next epoch, about 24 hours later. Rewards are added at the end of every epoch after that." },
-  { q: "How much can I earn?", a: "Sui staking rewards are variable. They depend on total network stake, the stake subsidy, gas fees and the validator's commission. The current network rate is shown live on the Stake and Validators pages." },
-  { q: "How do I withdraw?", a: "Choose a stake on the Stake page and unstake it. Your SUI and earned rewards return to your wallet in the same transaction. Rewards for the epoch in progress are not paid." },
-  { q: "Can I lose my staked SUI?", a: "Sui does not slash staked principal today. A validator that performs badly can be reported by other validators, which reduces the rewards paid to its pool. The value of SUI itself can go up or down." },
-  { q: "Is there a minimum amount?", a: "Native staking on Sui requires at least 1 SUI per stake, plus a small amount for gas." },
-  { q: "Why do I need an account?", a: "You can stake without one. An account lets you verify your email, keep your referral code and receive program updates." },
-  { q: "Is Suinance part of Sui?", a: "No. Suinance is not run by or affiliated with Mysten Labs or the Sui Foundation." },
+  { q: "What does a Sui validator do?", a: "Validators run the nodes that order and execute transactions, reach consensus with Mysticeti, keep the chain's data and vote on protocol upgrades. Each epoch they also quote a gas price, which sets the network's reference gas price." },
+  { q: "How is a validator's voting power set?", a: "By the SUI staked in its pool, its own stake plus everything delegated to it. Voting power is capped at 10% per validator, so no single operator can dominate consensus." },
+  { q: "What does it take to join the Sui validator set?", a: "A candidate registers on-chain, runs node hardware that meets Sui's requirements and gathers enough stake. Under SIP-39 the bar is set in voting power: at least 3 to request to join, and a validator that falls below 2 has seven epochs to recover. Check docs.sui.io for the current thresholds." },
+  { q: "How do validators earn?", a: "Each epoch the protocol pays the stake subsidy and gas fees to validator staking pools. The validator keeps its commission and the rest is shared with everyone staked in the pool." },
+  { q: "What is the tallying rule?", a: "Validators score each other's behaviour. A validator reported by enough of its peers has its rewards for that epoch reduced, which protects the network from poor operators without touching anyone's principal." },
+  { q: "How long is an epoch?", a: "About 24 hours on mainnet. The validator set, stake weights and reference gas price are fixed for each epoch, and changes apply at the boundary." },
 ];

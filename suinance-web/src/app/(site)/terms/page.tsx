@@ -2,28 +2,28 @@ import type { Metadata } from "next";
 import { pageMeta } from "@/lib/seo";
 import { LegalPage } from "@/components/site/legal-page";
 
-export const metadata: Metadata = pageMeta("/terms", "Terms of Use", "The terms that apply when you use the Suinance website, create an account and build Sui staking transactions with your own wallet.");
+export const metadata: Metadata = pageMeta("/terms", "Terms of Use", "The terms that apply when you use the Suinance website, create an account or apply to the Suinance Validator Program.");
 
 export default function TermsPage() {
   return (
     <LegalPage
       eyebrow="Terms of use"
       title="Terms of use"
-      intro="These terms apply when you use the Suinance website or create a Suinance account. By using the site, you agree to them."
+      intro="These terms apply when you use the Suinance website, create a Suinance account or apply to the Suinance Validator Program. By using the site, you agree to them."
       updated="9 November 2026"
       sections={[
         {
           heading: "What Suinance provides",
           body: [
-            "Suinance provides information about the Sui network, live validator data and an interface that lets you build and sign Sui staking transactions in your own wallet.",
-            "Suinance does not hold, transfer or manage your digital assets. Transactions are executed by the Sui network after you approve them in your wallet.",
+            "Suinance runs an independent validator program for Sui and publishes information about the Sui network and live validator data.",
+            "Suinance does not hold, transfer or manage digital assets, and does not operate validators on behalf of anyone.",
           ],
         },
         {
           heading: "Your account",
           body: [
             "You must give accurate details when you register and keep your password secure. You are responsible for activity on your account.",
-            "You must be old enough to enter a binding agreement where you live, and you must not use Suinance where staking or crypto assets are prohibited.",
+            "You must be old enough to enter a binding agreement where you live, and you must not use Suinance where crypto assets are prohibited.",
           ],
         },
         {
@@ -31,10 +31,17 @@ export default function TermsPage() {
           body: [["Do not try to break, overload or gain unauthorised access to the site.", "Do not use the site for fraud, money laundering or any unlawful purpose.", "Do not misuse referral codes or create accounts in bulk."]],
         },
         {
+          heading: "Validator Program",
+          body: [
+            "You may only apply with a validator you operate or are authorised to represent. The details you submit must be accurate.",
+            "We decide on applications using the published criteria and may change those criteria with notice on this site. Membership does not guarantee any delegation, and members who stop meeting the criteria may be removed after the grace period.",
+          ],
+        },
+        {
           heading: "Information and risk",
           body: [
             "Network data comes from public Sui sources and may be delayed or incomplete. Estimates are projections, not promises.",
-            "Staking carries risk, described in our Risk disclosure. You decide whether and how much to stake.",
+            "Running and backing validators carries risk, described in our Risk disclosure. Your decisions are your own.",
           ],
         },
         {

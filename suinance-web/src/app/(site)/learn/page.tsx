@@ -8,9 +8,9 @@ import { PageHero } from "@/components/site/page-hero";
 import { LearnVisual } from "@/components/site/hero-visuals";
 import { Steps } from "@/components/site/steps";
 import { ConsensusDag, ModelToggle, TechGrid, TokenDonut, UseCaseTabs } from "@/components/learn/interactive";
-import { chainComparison, founders, keyFacts, stakingBasics, techCards, tokenomics, useCases } from "@/content/sui";
+import { chainComparison, founders, keyFacts, validatorBasics, techCards, tokenomics, useCases } from "@/content/sui";
 
-export const metadata: Metadata = pageMeta("/learn", "Learn Sui: How the Sui Blockchain Works", "A visual guide to Sui: the object model, Move, Mysticeti consensus, SUI tokenomics, what SUI is used for and how staking rewards work.");
+export const metadata: Metadata = pageMeta("/learn", "Learn Sui: How the Sui Blockchain Works", "A visual guide to Sui: the object model, Move, Mysticeti consensus, SUI tokenomics, what SUI is used for and how validators secure the network.");
 
 const chapters = [
   { id: "what", label: "What is Sui" },
@@ -19,7 +19,7 @@ const chapters = [
   { id: "uses", label: "Uses" },
   { id: "compare", label: "Compare" },
   { id: "team", label: "Team" },
-  { id: "staking", label: "Staking" },
+  { id: "validators", label: "Validators" },
 ];
 
 function Chapter({ id, n, title, intro, children }: { id: string; n: number; title: string; intro?: string; children: React.ReactNode }) {
@@ -41,7 +41,7 @@ export default function LearnPage() {
       <PageHero
         eyebrow="Learn Sui"
         title="The Sui blockchain, explained"
-        description="How Sui works, who built it, how the SUI token is set up and how staking rewards are earned. Tap and play with each chapter."
+        description="How Sui works, who built it, how the SUI token is set up and how validators secure the network. Tap and play with each chapter."
         aside={<LearnVisual />}
         ticker={["Object model", "Move language", "Mysticeti consensus", "10B max supply", "zkLogin", "Sponsored transactions", "Epochs"]}
       >
@@ -177,11 +177,11 @@ export default function LearnPage() {
         </div>
       </Chapter>
 
-      <Chapter id="staking" n={7} title="How staking works on Sui" intro="Staking is how SUI holders help secure the network and earn a share of the rewards it pays.">
+      <Chapter id="validators" n={7} title="How validators secure Sui" intro="Validators run the network. SUI holders back them by delegating stake, which sets each validator's voting power.">
         <div className="grid gap-12">
-          <Steps steps={stakingBasics} />
-          <LinkButton href="/stake" size="lg" className="w-fit">
-            Start staking <ArrowRight className="h-5 w-5" aria-hidden />
+          <Steps steps={validatorBasics} />
+          <LinkButton href="/validators" size="lg" className="w-fit">
+            See the validator set <ArrowRight className="h-5 w-5" aria-hidden />
           </LinkButton>
         </div>
       </Chapter>

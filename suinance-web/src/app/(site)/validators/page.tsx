@@ -7,30 +7,50 @@ import { PageHero } from "@/components/site/page-hero";
 import { LiveStats } from "@/components/site/live-stats";
 import { ValidatorTable } from "@/components/site/validator-table";
 import { Network3D } from "@/components/three/scenes";
-import { safeNetworkSnapshot } from "@/lib/sui/network";
+import { nakamotoCoefficient, safeNetworkSnapshot } from "@/lib/sui/network";
+import { checkValidator, summarize } from "@/lib/program-check";
+import { formatNumber } from "@/lib/utils";
+import { programRules } from "@/content/program";
+import { LinkButton } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 
 export const revalidate = 300;
 
-export const metadata: Metadata = pageMeta("/validators", "Sui Validators: Live Commission, Stake & APY", "Compare every active Sui validator live from mainnet: total stake, commission, voting power and estimated staking rate, with explorer links.");
+export const metadata: Metadata = pageMeta("/validators", "Sui Validator Set: Live Stake, Commission & Voting Power", "Every active Sui validator, live from mainnet: stake, voting power, commission and gas price quotes, with Suinance Validator Program members marked.");
 
 const criteria = [
-  { icon: Percent, title: "Commission", body: "The share of rewards the validator keeps. Lower commission means more of the rewards reach you." },
-  { icon: Scale, title: "Stake and voting power", body: "Very large validators concentrate power. Spreading stake across mid-sized validators keeps Sui decentralised." },
-  { icon: Activity, title: "Performance", body: "Validators that perform badly can be reported by their peers, which cuts the rewards paid to their pool." },
-  { icon: ShieldCheck, title: "Track record", body: "Check how long a validator has been active, who runs it and how it communicates with stakers." },
+  { icon: Percent, title: "Commission", body: `Program members keep commission at ${programRules.maxCommissionPct}% or lower, and announce changes before they apply.` },
+  { icon: Scale, title: "Voting power", body: `Members stay under ${programRules.maxVotingPowerPct}% of the network, so the program strengthens mid-sized operators.` },
+  { icon: Activity, title: "Peer reports", body: `No tallying-rule reports from other validators in the last ${programRules.cleanEpochs} epochs.` },
+  { icon: ShieldCheck, title: "Public identity", body: "Name, description, logo and website set on-chain, with a team that can be reached." },
 ];
 
 export default async function ValidatorsPage() {
   const snap = await safeNetworkSnapshot();
+  const decentral = snap
+    ? (() => {
+        const vs = snap.validators;
+        const byPower = [...vs].sort((a, b) => b.votingPowerPct - a.votingPowerPct);
+        const commissions = vs.map((v) => v.commissionPct).sort((a, b) => a - b);
+        return [
+          { value: String(nakamotoCoefficient(vs)), label: "Nakamoto coefficient", note: "Fewest validators that together hold over one third of voting power" },
+          { value: `${formatNumber(byPower.slice(0, 10).reduce((s, v) => s + v.votingPowerPct, 0), 1)}%`, label: "Top 10 voting power", note: "Share held by the ten largest validators" },
+          { value: `${formatNumber(commissions[Math.floor(commissions.length / 2)] ?? 0, 2)}%`, label: "Median commission", note: "Half of all validators charge this or less" },
+          { value: String(vs.filter((v) => summarize(checkValidator(v)).eligible).length), label: "Meet program checks", note: "Active validators passing every automatic check" },
+          { value: String(vs.filter((v) => v.reportedBy.length > 0).length), label: "Reported this epoch", note: "Validators flagged by peers under the tallying rule" },
+          { value: String(vs.filter((v) => v.atRisk).length), label: "At risk", note: "Below Sui's minimum stake and facing removal" },
+        ];
+      })()
+    : [];
 
   return (
     <>
       <PageHero
         eyebrow="Validators"
-        title="Every Sui validator, side by side"
-        description="Compare stake, commission and estimated staking rate for the full active validator set, updated from Sui mainnet every few minutes."
+        title="The Sui validator set, live"
+        description="Stake, voting power, commission and gas price quotes for every active Sui validator, updated from mainnet every few minutes. Program members carry a badge."
         aside={<Network3D className="mx-auto aspect-square w-full max-w-[300px] sm:max-w-[420px]" highlight={snap?.validatorCount ? Math.min(snap.validatorCount, 30) : 22} />}
-        ticker={["Live from mainnet", "Stake", "Commission", "Voting power", "Estimated rate", "Explorer links"]}
+        ticker={["Live from mainnet", "Voting power", "Commission", "Gas price quotes", "Program members", "Explorer links"]}
       />
 
       <Container className="pt-10 pb-10">
@@ -53,10 +73,40 @@ export default async function ValidatorsPage() {
         </Container>
       </Section>
 
+      {decentral.length > 0 && (
+        <Section className="surface-dark bg-ink pt-16 text-paper">
+          <Container className="grid gap-10">
+            <Reveal>
+              <SectionHeading
+                eyebrow="Decentralisation"
+                title={
+                  <>
+                    How spread out is <span className="text-yellow">Sui&apos;s power?</span>
+                  </>
+                }
+                description="Computed live from this epoch's validator set. Healthier networks have a higher Nakamoto coefficient and a smaller top-10 share."
+                className="[&_p]:text-paper/70"
+              />
+            </Reveal>
+            <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
+              {decentral.map((d, i) => (
+                <Reveal key={d.label} delay={i * 0.04}>
+                  <div className="grid h-full content-start gap-2 rounded-card border-[1.5px] border-paper/20 p-5 transition-colors hover:border-yellow sm:p-6">
+                    <span className="font-display text-[clamp(28px,3.6vw,44px)] font-extrabold leading-none text-yellow">{d.value}</span>
+                    <span className="font-medium">{d.label}</span>
+                    <span className="text-[13px] text-paper/60">{d.note}</span>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </Container>
+        </Section>
+      )}
+
       <Section className="border-t-[1.5px] border-ink bg-yellow-wash">
         <Container className="grid gap-12">
           <Reveal>
-            <SectionHeading eyebrow="Choosing a validator" title="What to look for before you stake" />
+            <SectionHeading eyebrow="Program standards" title="What a program member looks like" />
           </Reveal>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {criteria.map((c, i) => (
@@ -71,6 +121,11 @@ export default async function ValidatorsPage() {
               </Reveal>
             ))}
           </div>
+          <Reveal>
+            <LinkButton href="/program#criteria" size="lg" className="w-fit">
+              Read the full criteria <ArrowRight className="h-5 w-5" aria-hidden />
+            </LinkButton>
+          </Reveal>
         </Container>
       </Section>
     </>

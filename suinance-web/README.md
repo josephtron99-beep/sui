@@ -1,6 +1,6 @@
 # Suinance website
 
-Multi-page Next.js site for Suinance: learn Sui, compare live validators, stake SUI from your own wallet, and create an account with email OTP verification.
+Multi-page Next.js site for the Suinance Validator Program: program criteria and applications, the live Sui validator set, a Sui guide, and accounts with email OTP verification.
 
 ## Stack
 
@@ -10,13 +10,13 @@ Multi-page Next.js site for Suinance: learn Sui, compare live validators, stake 
 | Design system | Tailwind CSS v4 tokens in `src/app/globals.css` + components in `src/components/ui` |
 | Motion & 3D | `motion` (scroll reveals, layout animations), `lenis` (smooth scroll), React Three Fiber + drei (3D logo coin, validator network) |
 | Sui data | Sui GraphQL (`graphql.mainnet.sui.io`) for epoch, validators, rewards. Public JSON-RPC is deprecated. |
-| Wallet & staking | `@mysten/dapp-kit-react` + `@mysten/sui` gRPC client. Native `request_add_stake` / `request_withdraw_stake`. |
+| Validator Program | Rules in `src/content/program.ts`. Applications go to `POST /api/program/apply` (signed-in users) and the `validator_applications` table; the address is checked against the live active set. |
 | Auth | Email + password, 6-digit email OTP, JWT session cookie (`jose`), bcrypt, Drizzle ORM on Postgres |
 | Email | Resend |
 
 ## Pages
 
-`/` · `/learn` · `/stake` · `/validators` · `/ecosystem` · `/about` · `/faq` · `/risk-disclosure` · `/terms` · `/privacy`
+`/` · `/program` · `/validators` · `/learn` · `/ecosystem` · `/about` · `/faq` · `/risk-disclosure` · `/terms` · `/privacy`
 Auth: `/login` · `/register` · `/verify-email` · `/forgot-password` · `/reset-password` · `/account`
 
 ## Run locally
@@ -36,10 +36,7 @@ Checks: `npm run typecheck`, `npm run lint`, `npm run build`.
 
 1. Push this folder to GitHub and import it in Vercel (framework: Next.js; set **Root Directory** to `suinance-web` if the repo contains the parent folder).
 2. Add a Postgres database: Vercel → Storage → **Neon** (or any Postgres). This sets `DATABASE_URL`.
-3. Create the tables once, from your machine:
-   ```bash
-   DATABASE_URL="postgres://..." npm run db:push
-   ```
+3. Tables are created automatically on the first database connection. No migration step is needed.
 4. Create a [Resend](https://resend.com) account, verify your sending domain, and create an API key.
 5. In Vercel → Settings → Environment Variables, add the variables from `.env.example`:
    - `DATABASE_URL`, `SESSION_SECRET` (32+ random characters), `RESEND_API_KEY`, `EMAIL_FROM`, `NEXT_PUBLIC_SITE_URL`

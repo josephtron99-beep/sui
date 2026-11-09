@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
-import { ArrowRight, Check, Wallet } from "lucide-react";
+import { ArrowRight, BadgeCheck, Check, Send } from "lucide-react";
 import { LogoMark } from "@/components/ui/logo";
 import { cn, formatNumber } from "@/lib/utils";
 
@@ -95,20 +95,17 @@ export function LearnVisual() {
   );
 }
 
-/* ─────────── Stake: wallet → validator → rewards flow ─────────── */
-export function StakeVisual({ apyPct, epoch }: { apyPct: number | null; epoch: number | null }) {
+/* ─────────── Program: apply → review → member, with the live checks ─────────── */
+export function ProgramVisual({ validatorCount, epoch }: { validatorCount: number | null; epoch: number | null }) {
   const reduce = useReducedMotion();
   const float = useFloat(0, 8);
+  const checks = ["Active on Sui mainnet", "Commission within the cap", "No peer reports", "Current Sui release"];
   return (
     <div className="relative mx-auto w-full max-w-[440px]" aria-hidden>
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.9, ease, delay: 0.25 }}
-      >
+      <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, ease, delay: 0.25 }}>
         <motion.div {...float} className="grid gap-4 rounded-3xl border-[1.5px] border-ink bg-paper p-5 shadow-hard sm:p-6">
           <div className="flex items-center justify-between">
-            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted">Native staking</span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted">Program review</span>
             <span className="flex items-center gap-1.5 rounded-full bg-success-soft px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-success">
               <span className="h-1.5 w-1.5 rounded-full bg-success" /> Mainnet
             </span>
@@ -116,9 +113,9 @@ export function StakeVisual({ apyPct, epoch }: { apyPct: number | null; epoch: n
 
           <div className="relative grid grid-cols-[1fr_auto_1fr_auto_1fr] items-center gap-2">
             {[
-              { label: "Your wallet", icon: <Wallet className="h-5 w-5" /> },
-              { label: "Validator pool", icon: <LogoMark className="h-5 w-auto" /> },
-              { label: "Rewards", icon: <span className="font-display text-sm font-extrabold">+%</span> },
+              { label: "Apply", icon: <Send className="h-5 w-5" /> },
+              { label: "On-chain review", icon: <LogoMark className="h-5 w-auto" /> },
+              { label: "Member", icon: <BadgeCheck className="h-5 w-5" /> },
             ].map((n, i) => (
               <div key={n.label} className="contents">
                 <div className="grid justify-items-center gap-2 text-center">
@@ -141,27 +138,38 @@ export function StakeVisual({ apyPct, epoch }: { apyPct: number | null; epoch: n
             ))}
           </div>
 
+          <ul className="grid gap-2 text-[13px]">
+            {checks.map((t, i) => (
+              <motion.li
+                key={t}
+                className="flex items-center justify-between gap-2 rounded-lg border border-line px-3 py-2"
+                initial={{ opacity: 0, x: -12 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, ease, delay: 0.7 + i * 0.15 }}
+              >
+                {t}
+                <motion.span
+                  className="surface-dark grid h-5 w-5 place-items-center rounded-full bg-ink text-yellow"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 18, delay: 1 + i * 0.15 }}
+                >
+                  <Check className="h-3 w-3" />
+                </motion.span>
+              </motion.li>
+            ))}
+          </ul>
+
           <div className="grid grid-cols-2 gap-3">
             <div className="rounded-xl bg-yellow p-3">
-              <span className="block text-[11px] text-ink/70">Network rate (est.)</span>
-              <span className="font-display text-2xl font-extrabold tabular">{apyPct ? `${formatNumber(apyPct, 2)}%` : "Live"}</span>
+              <span className="block text-[11px] text-ink/70">Active validators</span>
+              <span className="font-display text-2xl font-extrabold tabular">{validatorCount ?? "Live"}</span>
             </div>
             <div className="rounded-xl bg-yellow-wash p-3">
-              <span className="block text-[11px] text-muted">Current epoch</span>
+              <span className="block text-[11px] text-muted">Checked at epoch</span>
               <span className="font-display text-2xl font-extrabold tabular">{epoch ? formatNumber(epoch) : "Live"}</span>
             </div>
           </div>
-
-          <ul className="grid gap-2 text-[13px]">
-            {["Coins stay in your address", "Active from the next epoch", "Withdraw any time"].map((t) => (
-              <li key={t} className="flex items-center gap-2">
-                <span className="grid h-5 w-5 place-items-center rounded-full surface-dark bg-ink text-yellow">
-                  <Check className="h-3 w-3" />
-                </span>
-                {t}
-              </li>
-            ))}
-          </ul>
         </motion.div>
       </motion.div>
     </div>

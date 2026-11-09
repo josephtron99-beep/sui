@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Field, FormAlert, Input, PasswordInput } from "@/components/ui/form";
 import { AuthCard, postJson } from "./shared";
 
-export function LoginForm({ notice }: { notice?: string }) {
+export function LoginForm({ notice, next = "/account" }: { notice?: string; next?: string }) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,7 +23,7 @@ export function LoginForm({ notice }: { notice?: string }) {
     const res = await postJson("/api/auth/login", { email, password });
     setLoading(false);
     if (res.ok) {
-      router.replace("/account");
+      router.replace(next);
       router.refresh();
       return;
     }

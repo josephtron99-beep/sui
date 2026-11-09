@@ -1,25 +1,25 @@
 import type { Metadata } from "next";
 import { OG_IMAGE } from "@/lib/seo";
 import Link from "next/link";
-import { ArrowRight, ArrowUpRight, KeyRound, Layers, Timer } from "lucide-react";
+import { ArrowRight, ArrowUpRight, BadgeCheck, Handshake, Radar } from "lucide-react";
 import { Container, Eyebrow, Section, SectionHeading } from "@/components/ui/primitives";
 import { LinkButton } from "@/components/ui/button";
 import { Magnetic, Reveal, SplitWords, TiltCard } from "@/components/ui/motion";
 import { LogoCoin3D, Network3D } from "@/components/three/scenes";
 import { LiveStats } from "@/components/site/live-stats";
 import { Steps } from "@/components/site/steps";
-import { Estimator } from "@/components/site/estimator";
 import { Accordion } from "@/components/site/accordion";
 import { safeNetworkSnapshot } from "@/lib/sui/network";
-import { faqs, keyFacts, stakingBasics } from "@/content/sui";
+import { keyFacts } from "@/content/sui";
+import { eligibility, programFaqs, programSteps } from "@/content/program";
 import { formatNumber } from "@/lib/utils";
 
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: { absolute: "Suinance · Stake SUI On-Chain, Earn Every Epoch" },
+  title: { absolute: "Suinance · The Validator Program for Sui" },
   description:
-    "Stake SUI on-chain from your own wallet. Compare live Sui validators, earn protocol rewards every epoch and withdraw any time. Non-custodial, no lock-up.",
+    "An independent validator program for Sui: public on-chain standards, checks every epoch and introductions to SUI delegators. Apply with your validator.",
   alternates: { canonical: "/" },
   openGraph: { url: "/", images: [OG_IMAGE] },
   twitter: { card: "summary_large_image", images: [OG_IMAGE.url] },
@@ -27,19 +27,19 @@ export const metadata: Metadata = {
 
 const pillars = [
   {
-    icon: KeyRound,
-    title: "Your keys, your SUI",
-    body: "You stake from your own wallet. The StakedSui object stays in your address, and no one else can move it.",
+    icon: BadgeCheck,
+    title: "Public standards",
+    body: "Commission, peer reports, software version and voting power. Every rule is written down and checked with on-chain data.",
   },
   {
-    icon: Layers,
-    title: "You pick the validators",
-    body: "Compare live commission, stake and voting power for every Sui validator, then spread your stake across the ones you trust.",
+    icon: Radar,
+    title: "Checked every epoch",
+    body: "Each member's record is reviewed at every epoch boundary, so the program badge always reflects how a validator runs today.",
   },
   {
-    icon: Timer,
-    title: "Rewards every epoch",
-    body: "Once active, your stake earns protocol rewards about every 24 hours. They compound automatically in the pool.",
+    icon: Handshake,
+    title: "Reach real delegators",
+    body: "Members are introduced to the Suinance community of SUI holders, who choose where to stake from their own wallets.",
   },
 ];
 
@@ -54,34 +54,34 @@ export default async function HomePage() {
         <Container className="grid items-center gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
           <div className="grid gap-7 pt-6 lg:pt-0">
             <Reveal>
-              <Eyebrow>Native staking on Sui mainnet</Eyebrow>
+              <Eyebrow>Suinance Validator Program · Sui mainnet</Eyebrow>
             </Reveal>
             <h1 className="text-[clamp(38px,5vw,66px)] font-extrabold leading-[1.02]">
-              <SplitWords text="Stake SUI." />
+              <SplitWords text="Validators that" />
               <br />
               <span className="highlight">
-                <SplitWords text="Earn on-chain." delay={0.18} />
+                <SplitWords text="keep Sui strong." delay={0.18} />
               </span>
             </h1>
             <Reveal delay={0.35}>
-              <p className="max-w-[50ch] text-base text-muted sm:text-lg">
-                Delegate SUI to Sui validators straight from your wallet. Your stake lives on-chain as a StakedSui object only you control, and
-                protocol rewards compound every epoch. No custody. No lock-up.
+              <p className="max-w-[52ch] text-base text-muted sm:text-lg">
+                Suinance is an independent program for Sui validator operators. We set public standards, check every member&apos;s on-chain
+                record each epoch and connect well-run validators with the SUI holders who secure the network.
               </p>
             </Reveal>
             <Reveal delay={0.45} className="flex flex-wrap items-center gap-3">
               <Magnetic>
-                <LinkButton href="/stake" size="lg">
-                  Start staking <ArrowUpRight className="h-5 w-5" aria-hidden />
+                <LinkButton href="/program#apply" size="lg">
+                  Apply as a validator <ArrowUpRight className="h-5 w-5" aria-hidden />
                 </LinkButton>
               </Magnetic>
-              <LinkButton href="/learn" variant="outline" size="lg">
-                Learn how Sui works
+              <LinkButton href="/program" variant="outline" size="lg">
+                How the program works
               </LinkButton>
             </Reveal>
             <Reveal delay={0.55}>
-              <ul className="flex flex-wrap gap-2" aria-label="How staking on Suinance works">
-                {["100% on-chain", "Non-custodial", "Move-secured", "Withdraw any time"].map((t) => (
+              <ul className="flex flex-wrap gap-2" aria-label="Program at a glance">
+                {["Public criteria", "Checked every epoch", "No fee to join", "Independent operators"].map((t) => (
                   <li
                     key={t}
                     className="flex items-center gap-2 rounded-full border border-line bg-paper/70 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.12em] text-muted backdrop-blur"
@@ -111,13 +111,13 @@ export default async function HomePage() {
         <Container className="grid gap-12">
           <Reveal>
             <SectionHeading
-              eyebrow="Why Suinance"
+              eyebrow="Why the program"
               title={
                 <>
-                  Staking that stays <span className="underline-yellow">in your hands</span>
+                  A higher bar for <span className="underline-yellow">Sui validators</span>
                 </>
               }
-              description="Native Sui staking is safe by design. Suinance makes it simple to choose validators, see what you earn and stay in control."
+              description="Sui is only as strong as the operators who run it. The program rewards the ones who run it well, and shows the proof."
             />
           </Reveal>
           <div className="grid gap-5 md:grid-cols-3">
@@ -142,12 +142,12 @@ export default async function HomePage() {
       <Section className="border-y-[1.5px] border-ink bg-yellow-wash">
         <Container className="grid gap-16">
           <Reveal>
-            <SectionHeading eyebrow="How staking works" title="Four steps, about one day to your first reward" />
+            <SectionHeading eyebrow="How it works" title="Four steps from application to member" />
           </Reveal>
-          <Steps steps={stakingBasics} />
+          <Steps steps={programSteps} />
           <Reveal>
-            <LinkButton href="/stake" variant="primary" size="lg" className="w-fit">
-              Go to staking <ArrowRight className="h-5 w-5" aria-hidden />
+            <LinkButton href="/program#apply" variant="primary" size="lg" className="w-fit">
+              Start your application <ArrowRight className="h-5 w-5" aria-hidden />
             </LinkButton>
           </Reveal>
         </Container>
@@ -162,46 +162,55 @@ export default async function HomePage() {
           <div className="order-1 grid gap-6 lg:order-2">
             <Reveal>
               <SectionHeading
-                eyebrow="Validator network"
-                title="Choose who secures your stake"
+                eyebrow="The validator set"
+                title="Built for a decentralised Sui"
                 description={
                   snap
-                    ? `${snap.validatorCount} validators secure Sui right now, holding ${formatNumber(snap.totalStakeSui / 1e9, 2)} billion staked SUI between them. See each one's commission, stake and estimated rate before you decide.`
-                    : "See each validator's commission, stake and estimated rate before you decide."
+                    ? `${snap.validatorCount} validators secure Sui right now, holding ${formatNumber(snap.totalStakeSui / 1e9, 2)} billion staked SUI between them. The program favours strong mid-sized operators, so stake and voting power spread more evenly across the set.`
+                    : "The program favours strong mid-sized operators, so stake and voting power spread more evenly across the validator set."
                 }
               />
             </Reveal>
             <Reveal delay={0.1}>
               <LinkButton href="/validators" variant="outline" size="lg" className="w-fit">
-                Compare validators <ArrowRight className="h-5 w-5" aria-hidden />
+                Explore the validator set <ArrowRight className="h-5 w-5" aria-hidden />
               </LinkButton>
             </Reveal>
           </div>
         </Container>
       </Section>
 
-      {/* Estimator */}
+      {/* Standards */}
       <Section className="surface-dark bg-ink text-paper">
-        <Container className="grid items-center gap-12 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="grid gap-6">
+        <Container className="grid gap-12">
+          <div className="flex flex-wrap items-end justify-between gap-6">
+            <div className="grid gap-4">
+              <Reveal>
+                <Eyebrow className="text-paper/60">Eligibility</Eyebrow>
+              </Reveal>
+              <Reveal>
+                <h2 className="text-[clamp(28px,3.6vw,44px)] font-extrabold">
+                  The standards, <span className="text-yellow">in numbers</span>
+                </h2>
+              </Reveal>
+            </div>
             <Reveal>
-              <Eyebrow className="text-paper/60">Plan your stake</Eyebrow>
-            </Reveal>
-            <Reveal>
-              <h2 className="text-[clamp(28px,3.6vw,44px)] font-extrabold">
-                See what your SUI <span className="text-yellow">could earn</span>
-              </h2>
-            </Reveal>
-            <Reveal delay={0.1}>
-              <p className="max-w-[48ch] text-lg text-paper/70">
-                Start from the live network rate, then adjust the amount and time. Sui rates are modest and change every epoch, so we show
-                them honestly.
-              </p>
+              <Link href="/program#criteria" className="group inline-flex items-center gap-2 py-2 font-medium text-paper">
+                Full criteria
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
+              </Link>
             </Reveal>
           </div>
-          <Reveal delay={0.1} className="text-ink">
-            <Estimator apyPct={snap?.networkApyPct ?? null} />
-          </Reveal>
+          <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
+            {eligibility.map((c, i) => (
+              <Reveal key={c.label} delay={i * 0.05}>
+                <div className="grid h-full content-start gap-2 rounded-card border-[1.5px] border-paper/20 p-5 transition-colors hover:border-yellow sm:p-6">
+                  <span className="font-display text-[clamp(28px,3.6vw,44px)] font-extrabold leading-none text-yellow">{c.value}</span>
+                  <span className="font-medium">{c.title}</span>
+                </div>
+              </Reveal>
+            ))}
+          </div>
         </Container>
       </Section>
 
@@ -236,10 +245,10 @@ export default async function HomePage() {
       <Section className="pt-0">
         <Container className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
           <Reveal>
-            <SectionHeading eyebrow="Questions" title="Before you stake" />
+            <SectionHeading eyebrow="Questions" title="Before you apply" />
           </Reveal>
           <Reveal delay={0.1} className="grid gap-6">
-            <Accordion items={faqs.slice(1, 6)} />
+            <Accordion items={programFaqs.slice(0, 5)} />
             <Link href="/faq" className="group inline-flex w-fit items-center gap-2 py-2 font-medium">
               All questions
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden />
@@ -254,12 +263,12 @@ export default async function HomePage() {
           <div className="relative mx-auto grid max-w-[1240px] gap-8 overflow-hidden rounded-[28px] border-[1.5px] border-ink bg-yellow px-6 py-14 sm:px-12 sm:py-20 lg:grid-cols-[1.4fr_1fr] lg:items-center">
             <div aria-hidden className="bg-grid absolute inset-0 opacity-40 mix-blend-multiply" />
             <div className="relative grid gap-4">
-              <h2 className="text-[clamp(28px,4vw,48px)] font-extrabold">Put your SUI to work.</h2>
-              <p className="max-w-[46ch] text-lg text-ink/75">Connect a Sui wallet, pick your validators and stake in under a minute.</p>
+              <h2 className="text-[clamp(28px,4vw,48px)] font-extrabold">Run a Sui validator?</h2>
+              <p className="max-w-[46ch] text-lg text-ink/75">Apply with your validator&apos;s address. We check the record on mainnet and reply by email.</p>
             </div>
             <div className="relative flex flex-wrap gap-3 lg:justify-end">
-              <LinkButton href="/stake" size="lg">
-                Start staking <ArrowUpRight className="h-5 w-5" aria-hidden />
+              <LinkButton href="/program#apply" size="lg">
+                Apply now <ArrowUpRight className="h-5 w-5" aria-hidden />
               </LinkButton>
               <LinkButton href="/register" variant="outline" size="lg">
                 Create account

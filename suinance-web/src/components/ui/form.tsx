@@ -23,7 +23,7 @@ export function Field({
   children: ReactNode;
 }) {
   return (
-    <div className="grid gap-1.5">
+    <div className="grid content-start gap-1.5">
       <label htmlFor={htmlFor} className="flex items-center justify-between text-sm font-medium">
         {label}
         {optional && <span className="font-mono text-[11px] uppercase tracking-wider text-muted">Optional</span>}

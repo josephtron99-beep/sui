@@ -127,8 +127,8 @@ export function Header() {
                 Log in
               </Link>
             )}
-            <Link href="/stake" className={buttonClasses("primary", "sm", "hidden sm:inline-flex")}>
-              Start staking
+            <Link href="/program#apply" className={buttonClasses("primary", "sm", "hidden sm:inline-flex")}>
+              Apply now
               <ArrowUpRight className="h-4 w-4 transition-transform group-hover/btn:-translate-y-0.5 group-hover/btn:translate-x-0.5" aria-hidden />
             </Link>
             <button
@@ -190,8 +190,8 @@ export function Header() {
                     Log in
                   </Link>
                 )}
-                <Link href="/stake" className={buttonClasses("primary", "lg", "w-full")}>
-                  Start staking
+                <Link href="/program#apply" className={buttonClasses("primary", "lg", "w-full")}>
+                  Apply to the program
                 </Link>
               </motion.div>
             </nav>
