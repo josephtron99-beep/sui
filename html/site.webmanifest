@@ -1,0 +1,15 @@
+{
+  "name": "Suinance \u00b7 The Validator Program for Sui",
+  "short_name": "Suinance",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffe11a",
+  "icons": [
+    {
+      "src": "assets/img/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
