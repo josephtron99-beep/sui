@@ -43,3 +43,6 @@ next-env.d.ts
 
 # local embedded database
 .pglite
+
+# static HTML edition, copied from ../html at build time
+/public/html/

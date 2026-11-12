@@ -74,7 +74,7 @@
     });
     return form;
   }
-  const safeNext = (n) => (n && /^[a-z0-9-]+\.html(#[a-z-]+)?$/i.test(n) ? n : "account.html");
+  const safeNext = (n) => (n && /^(dashboard\/)?[a-z0-9-]+\.html(#[a-z-]+)?$/i.test(n) ? n : "dashboard/index.html");
   const emailOk = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
   /* Password strength meter */
@@ -186,7 +186,7 @@
     if (!emailOk(v.email)) return showErrors(form, { email: "Enter a valid email address" }, "Please check the highlighted fields.");
     if (!/^\d{6}$/.test(v.code)) return showErrors(form, { code: "Enter the 6-digit code" }, "Enter the 6-digit code from the email.");
     const r = await post("/api/auth/verify-email", { email: v.email, code: v.code });
-    if (r.ok) return location.replace("account.html?welcome=1");
+    if (r.ok) return location.replace("dashboard/index.html?welcome=1");
     showErrors(form, r.fields, r.message || "That code did not work.");
   });
 

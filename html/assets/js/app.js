@@ -325,7 +325,7 @@
       .then((d) => {
         if (!d || !d.user) return;
         const first = String(d.user.name).split(" ")[0];
-        $$("[data-auth-slot]").forEach((a) => { a.href = "account.html"; a.textContent = a.dataset.authSlot === "mobile" ? "My account" : first; });
+        $$("[data-auth-slot]").forEach((a) => { a.href = "dashboard/index.html"; a.textContent = a.dataset.authSlot === "mobile" ? "My dashboard" : first; });
       })
       .catch(() => {});
   }
