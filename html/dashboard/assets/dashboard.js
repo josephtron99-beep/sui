@@ -288,10 +288,47 @@
       stat({ label: "Total income", value: money(t.income), sub: "≈ " + sui(t.income), icon: "total", trend: trend(inc), series: series(inc), href: "income.html", link: "All income" }) +
       stat({ label: "My team", value: { n: d.direct.length + d.indirect.length, dec: 0 }, sub: `${d.direct.length} direct · ${d.indirect.length} indirect`, icon: "users", href: "network.html", link: "Network map" }) +
       stat({ label: "Active stakes", value: { n: d.stakes.length, dec: 0 }, sub: `${usd(sum(d.stakes, (x) => x.amountUsd), 0)} staked`, icon: "layers", tone: "is-dark", href: "staking-report.html", link: "Staking report" });
-    const box = $("[data-stats-income]");
-    if (box) box.innerHTML = C.incomes.map((i) => { const rows = inc.filter((l) => l.type === i.key); return stat({ label: i.name, value: money(t.by[i.key]), sub: "≈ " + sui(t.by[i.key]), icon: i.key, trend: trend(rows), series: series(rows), href: `income.html?type=${i.key}` }); }).join("") +
-      stat({ label: "Total income", value: money(t.income), sub: "≈ " + sui(t.income), icon: "total", tone: "is-yellow", trend: trend(inc), series: series(inc), href: "income.html", link: "All income" });
+    incomeBreakdown($("[data-income-v2]"), d, t, inc);
   };
+
+  // One calm panel: total + area chart on the left, the seven streams as a ranked list on the right.
+  function incomeBreakdown(box, d, t, inc) {
+    if (!box) return;
+    const items = C.incomes.map((i, k) => {
+      const rows = inc.filter((l) => l.type === i.key);
+      return { key: i.key, name: i.name, v: t.by[i.key], tr: trend(rows), color: PALETTE[k % PALETTE.length] };
+    }).sort((a, b) => b.v - a.v);
+    const total = t.income || 1, max = Math.max(...items.map((x) => x.v), 1);
+    // 30-day cumulative curve
+    const s = series(inc, 30), W = 560, Hh = 150, top = Math.max(...s, 1);
+    const pts = s.map((v, i) => [(i / (s.length - 1)) * W, Hh - 8 - (v / top) * (Hh - 24)]);
+    const line = pts.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + " " + p[1].toFixed(1)).join(" ");
+    const last = pts[pts.length - 1];
+    const tr = trend(inc);
+    const chip = (v) => (v == null || !isFinite(v) ? "" : `<span class="ib-trend ${v < 0 ? "down" : ""}">${v < 0 ? "▼" : "▲"} ${Math.abs(v) > 999 ? "999+" : Math.abs(v).toFixed(0)}%</span>`);
+    const last30 = sum(inc.filter((l) => Date.now() - new Date(l.date) < 30 * DAY), (l) => l.credit);
+    box.innerHTML = `<div class="ib" data-anim>
+      <div class="ib-hero">
+        <span class="ib-label">Total income</span>
+        <div class="ib-total"><span data-count="${t.income}" data-prefix="$" data-dec="2">$0</span>${chip(tr)}</div>
+        <span class="ib-sub">≈ ${sui(t.income)} · <b>${usd(last30)}</b> in the last 30 days</span>
+        <svg class="ib-chart" viewBox="0 0 ${W} ${Hh}" preserveAspectRatio="none" aria-hidden="true">
+          <defs><linearGradient id="ib-fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a0d0d0" stop-opacity=".35"/><stop offset="1" stop-color="#a0d0d0" stop-opacity="0"/></linearGradient></defs>
+          ${[0.25, 0.5, 0.75].map((g) => `<line x1="0" x2="${W}" y1="${(Hh * g).toFixed(0)}" y2="${(Hh * g).toFixed(0)}" class="grid"/>`).join("")}
+          <path class="area" d="${line} L${W} ${Hh} L0 ${Hh} Z"/><path class="line" d="${line}" pathLength="1"/>
+          <circle cx="${last[0]}" cy="${last[1]}" r="5" class="dot"/><circle cx="${last[0]}" cy="${last[1]}" r="11" class="halo"/>
+        </svg>
+        <div class="ib-axis"><span>30 days ago</span><span>Today</span></div>
+        <div class="ib-stack" aria-hidden="true">${items.map((x) => `<span data-w="${((x.v / total) * 100).toFixed(2)}%" style="background:${x.color}" title="${esc(x.name)}"></span>`).join("")}</div>
+      </div>
+      <ul class="ib-list">${items.map((x, i) => `<li style="--i:${i}"><a href="income.html?type=${x.key}">
+        <span class="ib-dot" style="--c:${x.color}"></span>
+        <span class="ib-name">${esc(x.name)}<small>${((x.v / total) * 100).toFixed(1)}% of income</small></span>
+        <span class="ib-track"><span data-w="${((x.v / max) * 100).toFixed(1)}%" style="background:${x.color}"></span></span>
+        <span class="ib-amt">${usd(x.v)}${chip(x.tr)}</span>
+        <svg class="ib-go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></a></li>`).join("")}</ul>
+    </div>`;
+  }
 
   R.income = (d) => {
     const type = params.get("type") || "all";
