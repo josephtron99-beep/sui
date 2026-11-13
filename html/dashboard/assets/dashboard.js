@@ -2,6 +2,7 @@
    Depends on ../assets/js/app.js (theme, reveal, password toggles) and data.js. */
 (function () {
   "use strict";
+  const T0 = performance.now();
   const $ = (s, r = document) => r.querySelector(s);
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const C = window.SUINANCE_DASH;
@@ -72,7 +73,30 @@
   function setSide(open) { side.classList.toggle("is-open", open); scrim.classList.toggle("is-open", open); document.documentElement.style.overflow = open && innerWidth < 1100 ? "hidden" : ""; }
   $$("[data-side-toggle]").forEach((b) => b.addEventListener("click", () => setSide(!side.classList.contains("is-open"))));
   addEventListener("keydown", (e) => e.key === "Escape" && setSide(false));
-  $$(".d-group > button").forEach((b) => b.addEventListener("click", () => { const g = b.parentElement; const o = !g.classList.contains("is-open"); g.classList.toggle("is-open", o); b.setAttribute("aria-expanded", String(o)); }));
+  $$(".d-group > button").forEach((b) => b.addEventListener("click", () => {
+    if (document.body.classList.contains("is-rail") && innerWidth >= 1100 && b.dataset.first) { location.href = b.dataset.first; return; }
+    const g = b.parentElement; const o = !g.classList.contains("is-open"); g.classList.toggle("is-open", o); b.setAttribute("aria-expanded", String(o));
+  }));
+  // Collapse the side menu to an icon rail (remembered)
+  $$("[data-rail-toggle]").forEach((b) => {
+    const label = () => b.setAttribute("aria-label", document.body.classList.contains("is-rail") ? "Expand the side menu" : "Collapse the side menu");
+    label();
+    b.addEventListener("click", () => {
+      const on = !document.body.classList.contains("is-rail");
+      document.body.classList.toggle("is-rail", on);
+      try { localStorage.setItem("suinance-rail", on ? "1" : "0"); } catch (e) {}
+      label();
+      setTimeout(() => dispatchEvent(new Event("resize")), 380);
+    });
+  });
+  // Avatar menu
+  const meBtn = $("[data-me-menu]"), meMenu = $(".d-menu");
+  if (meBtn && meMenu) {
+    const set = (o) => { meMenu.hidden = !o; meBtn.setAttribute("aria-expanded", String(o)); if (o) { const f = $("a, button", meMenu); f && f.focus(); } };
+    meBtn.addEventListener("click", (e) => { e.stopPropagation(); set(meMenu.hidden); });
+    document.addEventListener("click", (e) => { if (!meMenu.hidden && !e.target.closest(".d-me")) set(false); });
+    addEventListener("keydown", (e) => { if (e.key === "Escape" && !meMenu.hidden) { set(false); meBtn.focus(); } });
+  }
   $$("[data-logout]").forEach((b) => b.addEventListener("click", async () => { try { await fetch(C.api + "/api/auth/logout", { method: "POST", credentials: "include" }); } catch (e) {} location.replace("../index.html"); }));
 
   /* ───────── Count-up (with prefix/suffix) ───────── */
@@ -258,31 +282,15 @@
   R.overview = (d) => {
     const t = totals(d);
     const inc = d.ledger.filter((l) => isIncome(l.type));
-    $("[data-hero-stats]").innerHTML = `<span>Balance <b>${usd(t.balance)}</b></span><span>Income <b>${usd(t.income)}</b></span><span>Team <b>${d.direct.length + d.indirect.length}</b></span><span>Active stakes <b>${d.stakes.length}</b></span>`;
-    $("[data-stats-income]").innerHTML = C.incomes.map((i) => { const rows = inc.filter((l) => l.type === i.key); return stat({ label: i.name, value: money(t.by[i.key]), sub: "≈ " + sui(t.by[i.key]), icon: i.key, trend: trend(rows), series: series(rows), href: `income.html?type=${i.key}` }); }).join("") +
+    const glance = $("[data-stats-glance]");
+    if (glance) glance.innerHTML =
+      stat({ label: "Available balance", value: money(t.balance), sub: "≈ " + sui(t.balance), icon: "wallet", tone: "is-yellow", href: "wallet.html", link: "SUI wallet" }) +
+      stat({ label: "Total income", value: money(t.income), sub: "≈ " + sui(t.income), icon: "total", trend: trend(inc), series: series(inc), href: "income.html", link: "All income" }) +
+      stat({ label: "My team", value: { n: d.direct.length + d.indirect.length, dec: 0 }, sub: `${d.direct.length} direct · ${d.indirect.length} indirect`, icon: "users", href: "network.html", link: "Network map" }) +
+      stat({ label: "Active stakes", value: { n: d.stakes.length, dec: 0 }, sub: `${usd(sum(d.stakes, (x) => x.amountUsd), 0)} staked`, icon: "layers", tone: "is-dark", href: "staking-report.html", link: "Staking report" });
+    const box = $("[data-stats-income]");
+    if (box) box.innerHTML = C.incomes.map((i) => { const rows = inc.filter((l) => l.type === i.key); return stat({ label: i.name, value: money(t.by[i.key]), sub: "≈ " + sui(t.by[i.key]), icon: i.key, trend: trend(rows), series: series(rows), href: `income.html?type=${i.key}` }); }).join("") +
       stat({ label: "Total income", value: money(t.income), sub: "≈ " + sui(t.income), icon: "total", tone: "is-yellow", trend: trend(inc), series: series(inc), href: "income.html", link: "All income" });
-    const aD = d.direct.filter((m) => m.active), aI = d.indirect.filter((m) => m.active);
-    $("[data-stats-team]").innerHTML =
-      stat({ label: "Direct members", value: { n: d.direct.length, dec: 0 }, sub: `${aD.length} active · ${usd(sum(aD, (m) => m.investUsd), 0)}`, icon: "check", href: "direct-team.html", link: "Direct team" }) +
-      stat({ label: "Indirect members", value: { n: d.indirect.length, dec: 0 }, sub: `${aI.length} active · ${usd(sum(aI, (m) => m.investUsd), 0)}`, icon: "users", href: "indirect-team.html", link: "Indirect team" });
-    const L = d.team.leftBusinessUsd, Rb = d.team.rightBusinessUsd, lp = (L / (L + Rb || 1)) * 100;
-    $("[data-split]").innerHTML = `<div class="d-split" data-anim><div class="lbl"><span>Left<b>${usd(L, 0)}</b><span class="mono muted" style="font-size:12px">Today ${usd(d.team.todayLeftUsd, 0)}</span></span><span style="text-align:right">Right<b>${usd(Rb, 0)}</b><span class="mono muted" style="font-size:12px">Today ${usd(d.team.todayRightUsd, 0)}</span></span></div>
-      <div class="bar2"><span data-w="${lp}%" style="background:var(--yellow-2);border-right:1.5px solid var(--ink)"></span><span data-w="${100 - lp}%" style="background:var(--surface)"></span></div>
-      <p class="mono muted" style="font-size:12px">Matching volume: ${usd(Math.min(L, Rb), 0)} · weaker side: ${L < Rb ? "left" : "right"}</p></div>`;
-    donut($("[data-donut]"), C.incomes.map((i) => ({ label: i.name, v: t.by[i.key] })), "Total income");
-    $("[data-wallet-summary]").innerHTML = `<div class="d-balance"><div><span class="l">Available balance</span><span class="v" data-count="${t.balance}" data-prefix="$" data-dec="2">$0</span><span class="s">≈ ${sui(t.balance)}</span></div><div><span class="l">Retained (${C.retentionPct}%)</span><span class="v" data-count="${t.retained}" data-prefix="$" data-dec="2">$0</span><span class="s dim">held for the reserve</span></div></div>
-      <div class="d-pb d-rows"><div><span class="k"><i></i>Total deposits</span><span class="v">${usd(t.deposits)}</span></div><div><span class="k"><i></i>Total income</span><span class="v">${usd(t.income)}</span></div><div><span class="k"><i></i>Staked</span><span class="v">${usd(t.staked)}</span></div><div><span class="k"><i></i>Withdrawn</span><span class="v">${usd(t.withdrawals)}</span></div><div class="total"><span class="k">1 SUI</span><span class="v">${usd(PRICE, 4)}</span></div></div>`;
-    const base = location.origin + location.pathname.replace(/dashboard\/[^/]*$/, "") + C.referralBase + d.me.referralCode;
-    const sideTabs = $("[data-ref-side]");
-    const upd = (v) => { const link = base + (v ? "&side=" + v : ""); $("[data-ref-link]").textContent = link; $("[data-ref-copy]").dataset.copyText = link; };
-    tabs(sideTabs);
-    $$("button", sideTabs).forEach((b) => b.addEventListener("click", () => { $$("button", sideTabs).forEach((x) => x.setAttribute("aria-selected", String(x === b))); sideTabs._move(); upd(b.dataset.v); }));
-    upd("");
-    $("[data-ref-share]").addEventListener("click", async () => { const v = $("[data-ref-copy]").dataset.copyText; if (navigator.share) { try { await navigator.share({ title: "Join Suinance", url: v }); } catch (e) {} } else copy(v, "Link copied"); });
-    $("[data-deposit-addr]").textContent = d.depositAddress;
-    $("[data-deposit-copy]").dataset.copyText = d.depositAddress;
-    stakesList($("[data-my-stakes]"), d.stakes);
-    retention($("[data-retention]"), t);
   };
 
   R.income = (d) => {
@@ -524,6 +532,17 @@
   };
 
   /* ───────── Boot ───────── */
+  function finishLoader() {
+    const loader = $("[data-loader]");
+    if (!loader) { document.dispatchEvent(new Event("dash:loaded")); return; }
+    const wait = Math.max(0, 1700 - (performance.now() - T0));
+    setTimeout(() => {
+      loader.classList.add("done");
+      document.body.classList.remove("is-loading");
+      document.dispatchEvent(new Event("dash:loaded"));
+      setTimeout(() => loader.remove(), 900);
+    }, wait);
+  }
   window.SuinanceData.load().then((d) => {
     if (d.signedOut) { location.replace("../login.html?next=dashboard/" + (location.pathname.split("/").pop() || "index.html")); return; }
     PRICE = d.price || PRICE;
@@ -535,11 +554,15 @@
     $$("[data-price]").forEach((e) => (e.textContent = usd(PRICE, 4)));
     const h = new Date().getHours();
     $$("[data-greet]").forEach((e) => (e.textContent = h < 12 ? "Good morning," : h < 17 ? "Good afternoon," : "Good evening,"));
+    const loader = $("[data-loader]");
+    if (loader) { const n = $("[data-loader-name]", loader); n.textContent = "Welcome, " + name; requestAnimationFrame(() => n.classList.add("on")); }
     if (R[page]) R[page](d);
     // The network map can also sit inside other pages (e.g. the overview).
     if (page !== "network" && R.network && document.querySelector("[data-nm-view]")) R.network(d);
     animateIn();
+    finishLoader();
   }).catch((err) => {
+    finishLoader();
     console.error(err);
     $$("[data-table], [data-stats], [data-stats-income]").forEach((e) => (e.innerHTML = '<p class="d-empty">We could not load your dashboard. Please refresh the page.</p>'));
   });

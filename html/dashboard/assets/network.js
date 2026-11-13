@@ -99,11 +99,11 @@
           const q = pos.get(n.uid);
           const x2 = q.x, y2 = q.y, mx = (x1 + x2) / 2;
           const on = onSet.has(n.uid);
-          const delay = fresh ? Math.min(i * 0.03, 0.6) : 0;
+          const delay = fresh ? 0.35 + Math.min(i * 0.09, 1.1) : 0;
           lines += `<path class="${on ? "on" : ""} ${fresh && !reduce ? "draw" : ""}" style="--delay:${delay}s" d="M${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}"/>`;
           if (on && !reduce) lines += `<circle r="3.2"><animateMotion dur="2.4s" repeatCount="indefinite" path="M${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}"/></circle>`;
           const cls = ["nm-node", selected === n ? "sel" : "", on && selected !== n ? "path" : "", n.active ? "" : "inactive"].join(" ");
-          nodes += `<button type="button" class="${cls}" data-uid="${esc(n.uid)}" style="left:${x2}px;top:${y2 - NODE_H / 2}px;--delay:${fresh ? Math.min(i * 0.035, 0.7) : 0}s" aria-label="${esc(n.name)}, ID ${esc(n.uid)}, ${n.children.length} direct members">
+          nodes += `<button type="button" class="${cls}" data-uid="${esc(n.uid)}" style="left:${x2}px;top:${y2 - NODE_H / 2}px;--delay:${fresh ? 0.55 + Math.min(i * 0.09, 1.1) : 0}s" aria-label="${esc(n.name)}, ID ${esc(n.uid)}, ${n.children.length} direct members">
             <span class="nm-av" style="background:${PKG_COLORS[n.package] || "#6b6b70"}">${esc(initials(n.name))}</span>
             <span class="nm-meta"><b>${esc(n.name)}</b><small>ID ${esc(n.uid)} · ${esc(n.package)}</small></span>
             <span class="nm-dir"><b>${n.children.length}</b><small>directs</small></span>
@@ -243,9 +243,14 @@
       pick(hit, { flash: true });
     });
 
-    render(0);
-    showPanel(root);
-    view.scrollTop = Math.max(0, layout().Hh / 2 - view.clientHeight / 2);
+    function start() {
+      render(0);
+      showPanel(root);
+      view.scrollTop = Math.max(0, layout().Hh / 2 - view.clientHeight / 2);
+    }
+    // On the dashboard home a loader plays first; build the map once it lifts, like the reference video.
+    if (document.querySelector("[data-loader]")) document.addEventListener("dash:loaded", start, { once: true });
+    else start();
     addEventListener("resize", () => render(null));
   };
 })();
