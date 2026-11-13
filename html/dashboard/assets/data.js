@@ -102,7 +102,29 @@ window.SUINANCE_DASH = {
     }
     const tree = node(0);
     const leftBiz = 546250, rightBiz = 242870;
-    return { me, direct, indirect, stakes, unstakes, ledger, tickets, tree, team: { leftBusinessUsd: leftBiz, rightBusinessUsd: rightBiz, todayLeftUsd: 0, todayRightUsd: 300 }, depositAddress: "0x" + hex(64) };
+
+    // Referral (sponsor) network: you → your directs → their directs …
+    function member(base, depth) {
+      const p = base ? C.packages.find((x) => x.name === base.package) : pkgOf();
+      const joined = base ? base.joined : ago(int(1, 380));
+      const days = Math.max(1, Math.round((today - new Date(joined)) / day));
+      const invest = p ? p.amountUsd : 0;
+      const m = { uid: base ? base.uid : uid(), name: base ? base.name : name(), package: p ? p.name : "Free", investUsd: invest, joined, active: !!p, children: [] };
+      const max = depth === 1 ? 9 : depth === 2 ? 5 : depth === 3 ? 3 : 0;
+      const kids = depth >= 4 || r() < 0.22 ? 0 : int(0, max);
+      for (let i = 0; i < kids; i++) m.children.push(member(null, depth + 1));
+      const childInvest = m.children.reduce((s, c) => s + c.investUsd, 0);
+      const roi = p ? Math.min(invest * p.capX, invest * (p.dailyPct / 100) * Math.min(days, 300)) : 0;
+      const referral = childInvest * 0.05;
+      const passive = m.children.length ? childInvest * 0.02 + r() * 40 : 0;
+      m.earnings = { roi: +roi.toFixed(2), referral: +referral.toFixed(2), passive: +passive.toFixed(2), total: +(roi + referral + passive).toFixed(2) };
+      return m;
+    }
+    const network = { uid: me.uid, name: me.name, package: "Exo", investUsd: 3900, joined: me.joined, active: true, isRoot: true, children: direct.map((x) => member(x, 1)) };
+    const nInvest = network.children.reduce((s, c) => s + c.investUsd, 0);
+    network.earnings = { roi: 2088, referral: +(nInvest * 0.05).toFixed(2), passive: 4545.09, total: +(2088 + nInvest * 0.05 + 4545.09).toFixed(2) };
+
+    return { me, direct, indirect, stakes, unstakes, ledger, tickets, tree, network, team: { leftBusinessUsd: leftBiz, rightBusinessUsd: rightBiz, todayLeftUsd: 0, todayRightUsd: 300 }, depositAddress: "0x" + hex(64) };
   }
 
   /* Price of SUI in USD for the ≈ conversions. */

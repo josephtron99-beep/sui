@@ -176,7 +176,7 @@
   const SNO = { label: "S.No.", render: (_, i) => i + 1, mono: true };
 
   // Donut chart (animated arcs) + legend
-  const PALETTE = ["#ffd400", "#2a2a2d", "#6b6b70", "#a3a3a8", "#cfcfd2", "#8a6400", "#46464b"];
+  const PALETTE = ["#a0d0d0", "#dccb9f", "#9080c0", "#70a0a0", "#c0b0f0", "#407070", "#8a7a55"];
   function donut(box, items, centerLabel) {
     if (!box) return;
     const total = sum(items, (i) => i.v) || 1;
@@ -252,6 +252,8 @@
 
   /* ───────── Pages ───────── */
   const R = {};
+  // Shared with page scripts such as network.js (they add their renderer to R).
+  window.SuinanceDash = { R, esc, usd, num, date, toast, stat, animateIn };
 
   R.overview = (d) => {
     const t = totals(d);
@@ -534,6 +536,8 @@
     const h = new Date().getHours();
     $$("[data-greet]").forEach((e) => (e.textContent = h < 12 ? "Good morning," : h < 17 ? "Good afternoon," : "Good evening,"));
     if (R[page]) R[page](d);
+    // The network map can also sit inside other pages (e.g. the overview).
+    if (page !== "network" && R.network && document.querySelector("[data-nm-view]")) R.network(d);
     animateIn();
   }).catch((err) => {
     console.error(err);
