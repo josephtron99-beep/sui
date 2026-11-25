@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Poppins, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import { site } from "@/config/site";
 import { themeInitScript } from "@/components/site/theme";
+import Script from "next/script";
 import "./globals.css";
 
 const poppins = Poppins({ subsets: ["latin"], weight: ["300", "500", "600", "700", "800"], variable: "--font-poppins", display: "swap" });
@@ -44,7 +45,10 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
-      <body className="min-h-dvh overflow-x-clip">{children}</body>
+      <body className="min-h-dvh overflow-x-clip">
+        {children}
+        <Script src="https://suibot-q68w5utdr-josephtron99-beep.vercel.app/chatbot.js" strategy="afterInteractive" />
+      </body>
     </html>
   );
 }
